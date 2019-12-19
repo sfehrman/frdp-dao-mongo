@@ -33,7 +33,7 @@ public class TestMongoDataAccess {
       JSONObject jsonInfo = null;
 
       // setup
-      params.put(MongoDataAccess.PARAM_HOST, "localhost");
+      params.put(MongoDataAccess.PARAM_HOST, "127.0.0.1");
       params.put(MongoDataAccess.PARAM_PORT, "27017");
       params.put(MongoDataAccess.PARAM_AUTHEN_USER, "testadmin");
       params.put(MongoDataAccess.PARAM_AUTHEN_PASSWORD, "password");

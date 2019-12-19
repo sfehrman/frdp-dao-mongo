@@ -12,37 +12,19 @@ The following items must be installed:
 1. [Java Development Kit 8](https://openjdk.java.net/)
 
 ---
-## Dependencies
-
-The following Java packages are required.  The `mvn` process automatically dowloads and installs the packages, see `pom.xml` for details:
-
-```
-    <dependencies>
-        <dependency>
-            <groupId>com.forgerock.frdp</groupId>
-            <artifactId>frdp-framework</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongodb-driver</artifactId>
-            <version>3.7.1</version>
-        </dependency>
-    </dependencies>
-```
-
----
 ## Build
 
-### Install FRDP Framework:
+### Prerequisite:
 
-Clone or download the [frdp-framework](https://github.com/ForgeRock/frdp-framework) repository from the ForgeRock account on GitHub.  Compile and install using *Maven* (`mvn`)
+The following items must be completed, in order:
 
-### Install MongoDB Driver:
+1. [frdp-framework](https://github.com/ForgeRock/frdp-framework) ... clone / download then install using *Maven* (`mvn`)
 
-The `pom.xml` configuration file is configured to install the **MongoDB Driver** with the *Maven* (`mvn`) process.
+### MongoDB Driver:
 
-Reference [Maven Repository](https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver/3.7.1)
+The `pom.xml` file is configured to install the **MongoDB Driver** with the *Maven* (`mvn`) process.
+
+Reference [MongoDB Maven Repository](https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver/3.7.1)
 
 ### Clean, Compile, Install:
 
@@ -58,11 +40,11 @@ Packages are added to the user's home folder:
 find ~/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
 /home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
 /home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/maven-metadata-local.xml
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0-SNAPSHOT
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0-SNAPSHOT/frdp-dao-mongo-1.0-SNAPSHOT.pom
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0-SNAPSHOT/_remote.repositories
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0-SNAPSHOT/maven-metadata-local.xml
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0-SNAPSHOT/frdp-dao-mongo-1.0-SNAPSHOT.jar
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/frdp-dao-mongo-1.0.0.pom
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/_remote.repositories
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/maven-metadata-local.xml
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/frdp-dao-mongo-1.0.0.jar
 ```
 
 ----
@@ -104,6 +86,8 @@ This *Test* procedure assumes that MongoDB has been installed. This example was 
 
 ### Update the `TestMongoDataAccess.java` sample program:
 
+1. Edit the test program \
+`vi src/main/java/com/forgerock/frdp/dao/mongo/TestMongoDataAccess.java`
 1. Set the `MongoDataAccess.PARAM_HOST` parameter, change the value from `localhost` \
 **Before:** \
 `params.put(MongoDataAccess.PARAM_HOST, "localhost");` \
