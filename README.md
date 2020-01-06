@@ -10,6 +10,7 @@ The following items must be installed:
 
 1. [Apache Maven](https://maven.apache.org/)
 1. [Java Development Kit 8](https://openjdk.java.net/)
+1. [MongoDB](https://www.mongodb.com) *(tested with 3.2)*
 
 ---
 ## Build
