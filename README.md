@@ -4,7 +4,7 @@ ForgeRock Demonstration Platform : Data Access Object : MongoDB ... an implement
 
 `git clone https://github.com/ForgeRock/frdp-dao-mongo.git`
 
-## Requirements
+# Requirements
 
 The following items must be installed:
 
@@ -12,22 +12,21 @@ The following items must be installed:
 1. [Java Development Kit 8](https://openjdk.java.net/)
 1. [MongoDB](https://www.mongodb.com) *(tested with 3.2)*
 
----
-## Build
+# Build
 
-### Prerequisite:
+## Prerequisite:
 
 The following items must be completed, in order:
 
 1. [frdp-framework](https://github.com/ForgeRock/frdp-framework) ... clone / download then install using *Maven* (`mvn`)
 
-### MongoDB Driver:
+## MongoDB Driver:
 
 The `pom.xml` file is configured to install the **MongoDB Driver** with the *Maven* (`mvn`) process.
 
 Reference [MongoDB Maven Repository](https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver/3.7.1)
 
-### Clean, Compile, Install:
+## Clean, Compile, Install:
 
 Run *Maven* (`mvn`) processes to clean, compile and install the package:
 
@@ -48,12 +47,11 @@ find ~/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
 /home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/frdp-dao-mongo-1.0.0.jar
 ```
 
-----
-## Test
+# Test
 
 This section covers how to use the `TestMongoDataAccess.java` program which tests the MongoDB Data Access Object (`MongoDataAccess`) implementation.  A MongoDB installation must be configured to support a *test* `database` and `collection`.  The *test* program will perform `create, read, search, replace, delete` operations.
 
-### Configure MongoDB to support the test program:
+## Configure MongoDB to support the test program:
 
 This *Test* procedure assumes that MongoDB has been installed. This example was tested on MacOS and CentoOS 7.x using the `test.sh` script.  The examples use the MongoDB admin user `root` with a password of `password`, replace usernames and passowrds as necessary.
 
@@ -85,7 +83,7 @@ This *Test* procedure assumes that MongoDB has been installed. This example was 
 1. Logout \
 `> quit();`
 
-### Update the `TestMongoDataAccess.java` sample program:
+## Update the `TestMongoDataAccess.java` sample program:
 
 1. Edit the test program \
 `vi src/main/java/com/forgerock/frdp/dao/mongo/TestMongoDataAccess.java`
