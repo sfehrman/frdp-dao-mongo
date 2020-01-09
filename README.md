@@ -4,6 +4,14 @@ ForgeRock Demonstration Platform : Data Access Object : MongoDB ... an implement
 
 `git clone https://github.com/ForgeRock/frdp-dao-mongo.git`
 
+# Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# License
+
+[MIT](/LICENSE)
+
 # Requirements
 
 The following items must be installed:
@@ -30,7 +38,7 @@ Reference [MongoDB Maven Repository](https://mvnrepository.com/artifact/org.mong
 
 Run *Maven* (`mvn`) processes to clean, compile and install the package:
 
-```
+```bash
 mvn clean 
 mvn compile 
 mvn install
@@ -38,7 +46,7 @@ mvn install
 
 Packages are added to the user's home folder: 
 
-```
+```bash
 find ~/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
 /home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
 /home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/maven-metadata-local.xml
@@ -49,41 +57,44 @@ find ~/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
 /home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/frdp-dao-mongo-1.0.0.jar
 ```
 
-# Test
-
-This section covers how to use the `TestMongoDataAccess.java` program which tests the MongoDB Data Access Object (`MongoDataAccess`) implementation.  A MongoDB installation must be configured to support a *test* `database` and `collection`.  The *test* program will perform `create, read, search, replace, delete` operations.
-
-## Configure MongoDB to support the test program:
-
-This *Test* procedure assumes that MongoDB has been installed. This example was tested on MacOS and CentoOS 7.x using the `test.sh` script.  The examples use the MongoDB admin user `root` with a password of `password`, replace usernames and passowrds as necessary.
+# Configure MongoDB
 
 1. Access MongoDB system \
-`ssh root@hostname`
+\
+`ssh root@hostname` 
+
 1. Connect as "root" user to create database and collection \
+\
 `mongo --username "root" --password "password" --authenticationDatabase "admin" admin`
-1. Specify the database name \
-`> use test-server;`
-1. Drop existing database \
-`> db.dropDatabase();`
-1. Drop existing admin user \
-`> db.dropUser("testadmin");`
-1. Create admin user \
-`> db.createUser({user:"testadmin",pwd:"password",roles:["readWrite","dbAdmin"]});`
-1. Create collection \
-`> db.createCollection("test");`
-1. Logout as the "root" user \
-`> quit();`
-1. Connect as the "testadmin" user \
+1. We need to do some database initialization ... 
+Specify the database name: `test-server`.
+Drop database if it already exists. 
+Create an admin user, remove first, for the database: `testadmin`. 
+Create one collection: `test`. Quit MongoDB. \
+\
+`use test-server;` \
+`db.dropDatabase();` \
+`db.dropUser("testadmin");` \
+`db.createUser({user:"testadmin",pwd:"password",roles:["readWrite","dbAdmin"]});` \
+`db.createCollection("test");` \
+`quit();`
+
+1. Connect as the "testadmin" user for the `test-server` database \
+\
 `mongo --username "testadmin" --password "password" --authenticationDatabase "test-server" test-server`
-1. Create index in the collection for the "uid" attribute \
-`> db.test.createIndex({"uid":1});`
-1. Insert sample record into the collection \
-`> db.test.insert({"comment": "This is a test document"});`
-1. Display the sample record \
-`> db.test.find();` \
-`> db.test.find().pretty();`
-1. Logout \
-`> quit();`
+1. Create indexes for the `test` collection. 
+Insert test document into the collection. 
+Read the document from the collection. Quit MongoDB. \
+\
+`db.test.createIndex({"uid":1});` \
+`db.test.insert({"comment": "This is a test document"});` \
+`db.test.find();` \
+`db.test.find().pretty();` \
+`quit();`
+
+# Test 
+
+This section covers how to use the `TestMongoDataAccess.java` program which tests the MongoDB Data Access Object (`MongoDataAccess`) implementation.  A MongoDB installation must be configured to support a *test* `database` and `collection`.  The *test* program will perform `create, read, search, replace, delete` operations.
 
 ## Update the `TestMongoDataAccess.java` sample program:
 
@@ -97,7 +108,9 @@ This *Test* procedure assumes that MongoDB has been installed. This example was 
 1. Build the project with *Maven* \
 `mvn clean compile package install`
 
-### Edit the `test.sh` script:
+## Edit the `test.sh` script:
+
+This *Test* procedure assumes that MongoDB has been installed. This example was tested on MacOS and CentoOS 7.x using the `test.sh` script.  The examples use the MongoDB admin user `root` with a password of `password`, replace usernames and passowrds as necessary.
 
 1. Set the `M2` variable to match your user folder name \
 **Before:** \
@@ -108,7 +121,7 @@ This *Test* procedure assumes that MongoDB has been installed. This example was 
 `sh ./test.sh` \
 (sample test output below)
 
-```
+```bash
 Dec 18, 2019 10:59:58 PM com.mongodb.diagnostics.logging.JULLogger log
 INFO: Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
 Dec 18, 2019 10:59:58 PM com.mongodb.diagnostics.logging.JULLogger log
