@@ -39,9 +39,7 @@ Reference [MongoDB Maven Repository](https://mvnrepository.com/artifact/org.mong
 Run *Maven* (`mvn`) processes to clean, compile and install the package:
 
 ```bash
-mvn clean 
-mvn compile 
-mvn install
+mvn clean compile install
 ```
 
 Packages are added to the user's home folder: 
