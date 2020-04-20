@@ -39,9 +39,7 @@ Reference [MongoDB Maven Repository](https://mvnrepository.com/artifact/org.mong
 Run *Maven* (`mvn`) processes to clean, compile and install the package:
 
 ```bash
-mvn clean 
-mvn compile 
-mvn install
+mvn clean compile install
 ```
 
 Packages are added to the user's home folder: 
@@ -100,13 +98,18 @@ This section covers how to use the `TestMongoDataAccess.java` program which test
 
 1. Edit the test program \
 `vi src/main/java/com/forgerock/frdp/dao/mongo/TestMongoDataAccess.java`
-1. Set the `MongoDataAccess.PARAM_HOST` parameter, change the value from `localhost` \
+1. Set the `MongoDataAccess.PARAM_HOST` parameter, change the value from `127.0.0.1` \
 **Before:** \
-`params.put(MongoDataAccess.PARAM_HOST, "localhost");` \
+`params.put(MongoDataAccess.PARAM_HOST, "127.0.0.1");` \
 **After:** \
 `params.put(MongoDataAccess.PARAM_HOST, "<HOST_NAME>");`
+1. If you changed the MongoDB password for the `test-server` database, update the parameter from `password` \
+**Before** \
+`params.put(MongoDataAccess.PARAM_AUTHEN_PASSWORD, "password");` \
+**After** \
+`params.put(MongoDataAccess.PARAM_AUTHEN_PASSWORD, "<YOUR_PASSWORD>");`
 1. Build the project with *Maven* \
-`mvn clean compile package install`
+`mvn clean compile install`
 
 ## Edit the `test.sh` script:
 
