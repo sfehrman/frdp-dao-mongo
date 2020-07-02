@@ -4,115 +4,116 @@ ForgeRock Demonstration Platform : Data Access Object : MongoDB ... an implement
 
 `git clone https://github.com/ForgeRock/frdp-dao-mongo.git`
 
-## Requirements
+# Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# License
+
+[MIT](/LICENSE)
+
+# Requirements
 
 The following items must be installed:
 
 1. [Apache Maven](https://maven.apache.org/)
 1. [Java Development Kit 8](https://openjdk.java.net/)
+1. [MongoDB](https://www.mongodb.com) *(tested with 3.2)*
 
----
-## Dependencies
+# Build
 
-The following Java packages are required.  The `mvn` process automatically dowloads and installs the packages, see `pom.xml` for details:
+## Prerequisite:
 
-```
-    <dependencies>
-        <dependency>
-            <groupId>com.forgerock.frdp</groupId>
-            <artifactId>frdp-framework</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongodb-driver</artifactId>
-            <version>3.7.1</version>
-        </dependency>
-    </dependencies>
-```
+The following items must be completed, in order:
 
----
-## Build
+1. [frdp-framework](https://github.com/ForgeRock/frdp-framework) ... clone / download then install using *Maven* (`mvn`)
 
-### Install FRDP Framework:
+## MongoDB Driver:
 
-Clone or download the [frdp-framework](https://github.com/ForgeRock/frdp-framework) repository from the ForgeRock account on GitHub.  Compile and install using *Maven* (`mvn`)
+The `pom.xml` file is configured to install the **MongoDB Driver** with the *Maven* (`mvn`) process.
 
-### Install MongoDB Driver:
+Reference [MongoDB Maven Repository](https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver/3.7.1)
 
-The `pom.xml` configuration file is configured to install the **MongoDB Driver** with the *Maven* (`mvn`) process.
-
-Reference [Maven Repository](https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver/3.7.1)
-
-### Clean, Compile, Install:
+## Clean, Compile, Install:
 
 Run *Maven* (`mvn`) processes to clean, compile and install the package:
 
-```
-mvn clean compile package install
+```bash
+mvn clean compile install
 ```
 
 Packages are added to the user's home folder: 
 
-```
+```bash
 find ~/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
 /home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
 /home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/maven-metadata-local.xml
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0-SNAPSHOT
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0-SNAPSHOT/frdp-dao-mongo-1.0-SNAPSHOT.pom
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0-SNAPSHOT/_remote.repositories
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0-SNAPSHOT/maven-metadata-local.xml
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0-SNAPSHOT/frdp-dao-mongo-1.0-SNAPSHOT.jar
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/frdp-dao-mongo-1.0.0.pom
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/_remote.repositories
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/maven-metadata-local.xml
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/frdp-dao-mongo-1.0.0.jar
 ```
 
-----
-## Test
+# Configure MongoDB
+
+1. Access MongoDB system \
+\
+`ssh root@hostname` 
+
+1. Connect as "root" user to create database and collection \
+\
+`mongo --username "root" --password "password" --authenticationDatabase "admin" admin`
+1. We need to do some database initialization ... 
+Specify the database name: `test-server`.
+Drop database if it already exists. 
+Create an admin user, remove first, for the database: `testadmin`. 
+Create one collection: `test`. Quit MongoDB. \
+\
+`use test-server;` \
+`db.dropDatabase();` \
+`db.dropUser("testadmin");` \
+`db.createUser({user:"testadmin",pwd:"password",roles:["readWrite","dbAdmin"]});` \
+`db.createCollection("test");` \
+`quit();`
+
+1. Connect as the "testadmin" user for the `test-server` database \
+\
+`mongo --username "testadmin" --password "password" --authenticationDatabase "test-server" test-server`
+1. Create indexes for the `test` collection. 
+Insert test document into the collection. 
+Read the document from the collection. Quit MongoDB. \
+\
+`db.test.createIndex({"uid":1});` \
+`db.test.insert({"comment": "This is a test document"});` \
+`db.test.find();` \
+`db.test.find().pretty();` \
+`quit();`
+
+# Test 
 
 This section covers how to use the `TestMongoDataAccess.java` program which tests the MongoDB Data Access Object (`MongoDataAccess`) implementation.  A MongoDB installation must be configured to support a *test* `database` and `collection`.  The *test* program will perform `create, read, search, replace, delete` operations.
 
-### Configure MongoDB to support the test program:
+## Update the `TestMongoDataAccess.java` sample program:
 
-This *Test* procedure assumes that MongoDB has been installed. This example was tested on MacOS and CentoOS 7.x using the `test.sh` script.  The examples use the MongoDB admin user `root` with a password of `password`, replace usernames and passowrds as necessary.
-
-1. Access MongoDB system \
-`ssh root@hostname`
-1. Connect as "root" user to create database and collection \
-`mongo --username "root" --password "password" --authenticationDatabase "admin" admin`
-1. Specify the database name \
-`> use test-server;`
-1. Drop existing database \
-`> db.dropDatabase();`
-1. Drop existing admin user \
-`> db.dropUser("testadmin");`
-1. Create admin user \
-`> db.createUser({user:"testadmin",pwd:"password",roles:["readWrite","dbAdmin"]});`
-1. Create collection \
-`> db.createCollection("test");`
-1. Logout as the "root" user \
-`> quit();`
-1. Connect as the "testadmin" user \
-`mongo --username "testadmin" --password "password" --authenticationDatabase "test-server" test-server`
-1. Create index in the collection for the "uid" attribute \
-`> db.test.createIndex({"uid":1});`
-1. Insert sample record into the collection \
-`> db.test.insert({"comment": "This is a test document"});`
-1. Display the sample record \
-`> db.test.find();` \
-`> db.test.find().pretty();`
-1. Logout \
-`> quit();`
-
-### Update the `TestMongoDataAccess.java` sample program:
-
-1. Set the `MongoDataAccess.PARAM_HOST` parameter, change the value from `localhost` \
+1. Edit the test program \
+`vi src/main/java/com/forgerock/frdp/dao/mongo/TestMongoDataAccess.java`
+1. Set the `MongoDataAccess.PARAM_HOST` parameter, change the value from `127.0.0.1` \
 **Before:** \
-`params.put(MongoDataAccess.PARAM_HOST, "localhost");` \
+`params.put(MongoDataAccess.PARAM_HOST, "127.0.0.1");` \
 **After:** \
 `params.put(MongoDataAccess.PARAM_HOST, "<HOST_NAME>");`
+1. If you changed the MongoDB password for the `test-server` database, update the parameter from `password` \
+**Before** \
+`params.put(MongoDataAccess.PARAM_AUTHEN_PASSWORD, "password");` \
+**After** \
+`params.put(MongoDataAccess.PARAM_AUTHEN_PASSWORD, "<YOUR_PASSWORD>");`
 1. Build the project with *Maven* \
-`mvn clean compile package install`
+`mvn clean compile install`
 
-### Edit the `test.sh` script:
+## Edit the `test.sh` script:
+
+This *Test* procedure assumes that MongoDB has been installed. This example was tested on MacOS and CentoOS 7.x using the `test.sh` script.  The examples use the MongoDB admin user `root` with a password of `password`, replace usernames and passowrds as necessary.
 
 1. Set the `M2` variable to match your user folder name \
 **Before:** \
@@ -123,7 +124,7 @@ This *Test* procedure assumes that MongoDB has been installed. This example was 
 `sh ./test.sh` \
 (sample test output below)
 
-```
+```bash
 Dec 18, 2019 10:59:58 PM com.mongodb.diagnostics.logging.JULLogger log
 INFO: Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
 Dec 18, 2019 10:59:58 PM com.mongodb.diagnostics.logging.JULLogger log

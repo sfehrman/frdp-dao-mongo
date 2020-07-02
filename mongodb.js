@@ -1,6 +1,6 @@
 //
 // Login as the default administrator using the default authentication database
-// mongo --username "root" --password "password" --authenticationDatabase "admin" admin < test-mongodb.js
+// mongo --username "root" --password "password" --authenticationDatabase "admin" admin < mongodb.js
 //
 use test-server;
 db.dropDatabase();
