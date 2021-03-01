@@ -17,7 +17,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 The following items must be installed:
 
 1. [Apache Maven](https://maven.apache.org/)
-1. [Java Development Kit 8](https://openjdk.java.net/)
+1. [Java Development Kit 11](https://openjdk.java.net/projects/jdk/11/)
 1. [MongoDB](https://www.mongodb.com) *(tested with 3.2)*
 
 # Build
@@ -48,11 +48,10 @@ Packages are added to the user's home folder:
 find ~/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
 /home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
 /home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/maven-metadata-local.xml
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/frdp-dao-mongo-1.0.0.pom
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/_remote.repositories
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/maven-metadata-local.xml
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.0.0/frdp-dao-mongo-1.0.0.jar
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.2.0
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.2.0/frdp-dao-mongo-1.2.0.pom
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.2.0/_remote.repositories
+/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.2.0/frdp-dao-mongo-1.2.0.jar
 ```
 
 # Configure MongoDB
