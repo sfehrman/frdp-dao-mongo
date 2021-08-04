@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2019, ForgeRock, Inc., All rights reserved
+ * Copyright (c) 2018-2021, ForgeRock, Inc., All rights reserved
  * Use subject to license terms.
  */
 
@@ -123,7 +123,7 @@ public class MongoDataAccess extends DataAccess {
     * @return OperationIF output data
     */
    @Override
-   public final OperationIF execute(final OperationIF operInput) {
+   public synchronized final OperationIF execute(final OperationIF operInput) {
       boolean error = false;
       String METHOD = Thread.currentThread().getStackTrace()[1].getMethodName();
       StringBuilder msg = new StringBuilder(CLASS + ":" + METHOD + ": ");
