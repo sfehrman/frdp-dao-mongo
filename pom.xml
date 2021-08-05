@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.forgerock.frdp</groupId>
     <artifactId>frdp-dao-mongo</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -14,7 +14,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver</artifactId>
-            <version>3.7.1</version>
+            <version>3.12.10</version>
         </dependency>
     </dependencies>
     <properties>
