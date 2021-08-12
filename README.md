@@ -1,6 +1,6 @@
 # frdp-dao-mongo
 
-ForgeRock Demonstration Platform : Data Access Object : MongoDB ... an implementation of the DAO interface using the MongoDB Java API
+ForgeRock Demonstration Platform : Data Access Object : MongoDB ... an implementation of the DAO interface using the MongoDB Java Driver API
 
 `git clone https://github.com/ForgeRock/frdp-dao-mongo.git`
 
@@ -46,12 +46,12 @@ Packages are added to the user's home folder:
 
 ```bash
 find ~/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/maven-metadata-local.xml
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.2.0
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.2.0/frdp-dao-mongo-1.2.0.pom
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.2.0/_remote.repositories
-/home/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.2.0/frdp-dao-mongo-1.2.0.jar
+/Users/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo
+/Users/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/maven-metadata-local.xml
+/Users/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.2.1
+/Users/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.2.1/frdp-dao-mongo-1.2.1.jar
+/Users/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.2.1/frdp-dao-mongo-1.2.1.pom
+/Users/forgerock/.m2/repository/com/forgerock/frdp/frdp-dao-mongo/1.2.1/_remote.repositories
 ```
 
 # Configure MongoDB

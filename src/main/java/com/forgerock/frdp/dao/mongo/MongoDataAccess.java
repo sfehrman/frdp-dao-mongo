@@ -1,8 +1,7 @@
 /*
- * Copyright (c) 2018-2019, ForgeRock, Inc., All rights reserved
+ * Copyright (c) 2018-2021, ForgeRock, Inc., All rights reserved
  * Use subject to license terms.
  */
-
 package com.forgerock.frdp.dao.mongo;
 
 import com.forgerock.frdp.common.ConstantsIF;
@@ -92,6 +91,7 @@ public class MongoDataAccess extends DataAccess {
 
    /**
     * Do not allow the copying an instance of this class
+    * @return
     */
    @Override
    public CoreIF copy() {
@@ -118,12 +118,12 @@ public class MongoDataAccess extends DataAccess {
 
    /**
     * Execute the input operation, returns output operation
-    * 
+    *
     * @param operInput OperationIF input data
     * @return OperationIF output data
     */
    @Override
-   public final OperationIF execute(final OperationIF operInput) {
+   public synchronized final OperationIF execute(final OperationIF operInput) {
       boolean error = false;
       String METHOD = Thread.currentThread().getStackTrace()[1].getMethodName();
       StringBuilder msg = new StringBuilder(CLASS + ":" + METHOD + ": ");
@@ -152,41 +152,43 @@ public class MongoDataAccess extends DataAccess {
 
       if (!error) {
          switch (operInput.getType()) {
-         case CREATE: {
-            operOutput = this.create(operInput);
-            break;
-         }
-         case READ: {
-            operOutput = this.read(operInput);
-            break;
-         }
-         case REPLACE: {
-            operOutput = this.replace(operInput);
-            break;
-         }
-         case DELETE: {
-            operOutput = this.delete(operInput);
-            break;
-         }
-         case SEARCH: {
-            operOutput = this.search(operInput);
-            break;
-         }
-         default: {
-            error = true;
-            msg.append("Unsupported operation '").append(operInput.getType().toString()).append("'");
-
-            operOutput = new Operation(operInput.getType());
-            operOutput.setError(true);
-            operOutput.setState(STATE.FAILED);
-            operOutput.setStatus(msg.toString());
-            break;
-         }
+            case CREATE: {
+               operOutput = this.create(operInput);
+               break;
+            }
+            case READ: {
+               operOutput = this.read(operInput);
+               break;
+            }
+            case REPLACE: {
+               operOutput = this.replace(operInput);
+               break;
+            }
+            case DELETE: {
+               operOutput = this.delete(operInput);
+               break;
+            }
+            case SEARCH: {
+               operOutput = this.search(operInput);
+               break;
+            }
+            default: {
+               error = true;
+               msg.append("Unsupported operation '")
+                  .append(operInput.getType().toString())
+                  .append("'");
+               operOutput = new Operation(operInput.getType());
+               operOutput.setError(true);
+               operOutput.setState(STATE.FAILED);
+               operOutput.setStatus(msg.toString());
+               break;
+            }
          }
       }
 
       if (error) {
-         _logger.log(Level.WARNING, operOutput == null ? "dataOutput is null" : operOutput.getStatus());
+         _logger.log(Level.WARNING,
+            operOutput == null ? "dataOutput is null" : operOutput.getStatus());
       }
 
       _logger.exiting(CLASS, METHOD);
@@ -199,7 +201,7 @@ public class MongoDataAccess extends DataAccess {
     */
    /**
     * Create MongoDB document from input. Get JSON from the input
-    * 
+    *
     * <pre>
     * JSON input:
     * {
@@ -218,7 +220,7 @@ public class MongoDataAccess extends DataAccess {
     *    "uid": "..."
     * }
     * </pre>
-    * 
+    *
     * @param operInput OperatinIF input data
     * @return OperationIF output data
     */
@@ -241,8 +243,12 @@ public class MongoDataAccess extends DataAccess {
       jsonInput = operInput.getJSON();
 
       if (_logger.isLoggable(DEBUG_LEVEL)) {
-         _logger.log(DEBUG_LEVEL, "input=''{0}'', json=''{1}''", new Object[] {
-               operInput != null ? operInput.toString() : NULL, jsonInput != null ? jsonInput.toString() : NULL });
+         _logger.log(DEBUG_LEVEL,
+            "input=''{0}'', json=''{1}''",
+            new Object[]{
+               operInput != null ? operInput.toString() : NULL,
+               jsonInput != null ? jsonInput.toString() : NULL
+            });
       }
 
       jsonData = JSON.getObject(jsonInput, ConstantsIF.DATA);
@@ -298,8 +304,12 @@ public class MongoDataAccess extends DataAccess {
       operOutput.setJSON(jsonOutput);
 
       if (_logger.isLoggable(DEBUG_LEVEL)) {
-         _logger.log(DEBUG_LEVEL, "output=''{0}'', json=''{1}''", new Object[] {
-               operOutput != null ? operOutput.toString() : NULL, jsonOutput != null ? jsonOutput.toString() : NULL });
+         _logger.log(DEBUG_LEVEL,
+            "output=''{0}'', json=''{1}''",
+            new Object[]{
+               operOutput != null ? operOutput.toString() : NULL,
+               jsonOutput != null ? jsonOutput.toString() : NULL
+            });
       }
 
       _logger.exiting(CLASS, METHOD);
@@ -309,7 +319,7 @@ public class MongoDataAccess extends DataAccess {
 
    /**
     * Read MongoDB document for specified identifier. Get JSON from input
-    * 
+    *
     * <pre>
     * get primary key from JSON
     * JSON input:
@@ -321,7 +331,7 @@ public class MongoDataAccess extends DataAccess {
     * result is an iterator (should only have one result)
     * get document from result
     * create JSON from document
-    * add JSON to output 
+    * add JSON to output
     * JSON output:
     * {
     *    "uid": "...",
@@ -350,8 +360,12 @@ public class MongoDataAccess extends DataAccess {
       jsonInput = operInput.getJSON();
 
       if (_logger.isLoggable(DEBUG_LEVEL)) {
-         _logger.log(DEBUG_LEVEL, "input=''{0}'', json=''{1}''", new Object[] {
-               operInput != null ? operInput.toString() : NULL, jsonInput != null ? jsonInput.toString() : NULL });
+         _logger.log(DEBUG_LEVEL,
+            "input=''{0}'', json=''{1}''",
+            new Object[]{
+               operInput != null ? operInput.toString() : NULL,
+               jsonInput != null ? jsonInput.toString() : NULL
+            });
       }
 
       uid = JSON.getString(jsonInput, ConstantsIF.UID);
@@ -380,8 +394,12 @@ public class MongoDataAccess extends DataAccess {
       }
 
       if (_logger.isLoggable(DEBUG_LEVEL)) {
-         _logger.log(DEBUG_LEVEL, "output=''{0}'', json=''{1}''", new Object[] {
-               operOutput != null ? operOutput.toString() : NULL, jsonOutput != null ? jsonOutput.toString() : NULL });
+         _logger.log(DEBUG_LEVEL,
+            "output=''{0}'', json=''{1}''",
+            new Object[]{
+               operOutput != null ? operOutput.toString() : NULL,
+               jsonOutput != null ? jsonOutput.toString() : NULL
+            });
       }
 
       _logger.exiting(CLASS, METHOD);
@@ -391,7 +409,7 @@ public class MongoDataAccess extends DataAccess {
 
    /**
     * Replace MongoDB document for the specified identifier. Get JSON from input
-    * 
+    *
     * <pre>
     * JSON input:
     * {
@@ -409,7 +427,7 @@ public class MongoDataAccess extends DataAccess {
     * {
     * }
     * </pre>
-    * 
+    *
     * @param operInput OperationIF input data
     * @return OperationIF output data
     */
@@ -432,8 +450,12 @@ public class MongoDataAccess extends DataAccess {
       jsonInput = operInput.getJSON();
 
       if (_logger.isLoggable(DEBUG_LEVEL)) {
-         _logger.log(DEBUG_LEVEL, "input=''{0}'', json=''{1}''", new Object[] {
-               operInput != null ? operInput.toString() : NULL, jsonInput != null ? jsonInput.toString() : NULL });
+         _logger.log(DEBUG_LEVEL,
+            "input=''{0}'', json=''{1}''",
+            new Object[]{
+               operInput != null ? operInput.toString() : NULL,
+               jsonInput != null ? jsonInput.toString() : NULL
+            });
       }
 
       jsonData = JSON.getObject(jsonInput, ConstantsIF.DATA);
@@ -486,8 +508,12 @@ public class MongoDataAccess extends DataAccess {
       operOutput.setJSON(jsonOutput);
 
       if (_logger.isLoggable(DEBUG_LEVEL)) {
-         _logger.log(DEBUG_LEVEL, "output=''{0}'', json=''{1}''", new Object[] {
-               operOutput != null ? operOutput.toString() : NULL, jsonOutput != null ? jsonOutput.toString() : NULL });
+         _logger.log(DEBUG_LEVEL,
+            "output=''{0}'', json=''{1}''",
+            new Object[]{
+               operOutput != null ? operOutput.toString() : NULL,
+               jsonOutput != null ? jsonOutput.toString() : NULL
+            });
       }
 
       _logger.exiting(CLASS, METHOD);
@@ -497,7 +523,7 @@ public class MongoDataAccess extends DataAccess {
 
    /**
     * Delete MongoDB document for the specified identifier. Get JSON from input
-    * 
+    *
     * <pre>
     * JSON input:
     * {
@@ -531,8 +557,12 @@ public class MongoDataAccess extends DataAccess {
       jsonInput = operInput.getJSON();
 
       if (_logger.isLoggable(DEBUG_LEVEL)) {
-         _logger.log(DEBUG_LEVEL, "input=''{0}'', json=''{1}''", new Object[] {
-               operInput != null ? operInput.toString() : NULL, jsonInput != null ? jsonInput.toString() : NULL });
+         _logger.log(DEBUG_LEVEL,
+            "input=''{0}'', json=''{1}''",
+            new Object[]{
+               operInput != null ? operInput.toString() : NULL,
+               jsonInput != null ? jsonInput.toString() : NULL
+            });
       }
 
       uid = JSON.getString(jsonInput, ConstantsIF.UID);
@@ -564,8 +594,12 @@ public class MongoDataAccess extends DataAccess {
       operOutput.setJSON(jsonOutput);
 
       if (_logger.isLoggable(DEBUG_LEVEL)) {
-         _logger.log(DEBUG_LEVEL, "output=''{0}'', json=''{1}''", new Object[] {
-               operOutput != null ? operOutput.toString() : NULL, jsonOutput != null ? jsonOutput.toString() : NULL });
+         _logger.log(DEBUG_LEVEL,
+            "output=''{0}'', json=''{1}''",
+            new Object[]{
+               operOutput != null ? operOutput.toString() : NULL,
+               jsonOutput != null ? jsonOutput.toString() : NULL
+            });
       }
 
       _logger.exiting(CLASS, METHOD);
@@ -575,7 +609,7 @@ public class MongoDataAccess extends DataAccess {
 
    /**
     * Search MongoDB documents, matching search criteria. Get JSON from input
-    * 
+    *
     * <pre>
     * {
     *   "query": {
@@ -603,17 +637,17 @@ public class MongoDataAccess extends DataAccess {
     *   }
     * }
     * </pre>
-    * 
+    *
     * build query find documents in collection that match query response is an
-    * iterator process each result into JSON object and add to JSON array add array
-    * to output
-    * 
+    * iterator process each result into JSON object and add to JSON array add
+    * array to output
+    *
     * <pre>
     * JSON output:
     * {
     *    "quantity": x,
     *    "results": [
-    *       { 
+    *       {
     *         "uid": "...",
     *         "data": {
     *           "attr": "value"
@@ -645,8 +679,12 @@ public class MongoDataAccess extends DataAccess {
       jsonInput = operInput.getJSON();
 
       if (_logger.isLoggable(DEBUG_LEVEL)) {
-         _logger.log(DEBUG_LEVEL, "input=''{0}'', json=''{1}''", new Object[] {
-               operInput != null ? operInput.toString() : NULL, jsonInput != null ? jsonInput.toString() : NULL });
+         _logger.log(DEBUG_LEVEL,
+            "input=''{0}'', json=''{1}''",
+            new Object[]{
+               operInput != null ? operInput.toString() : NULL,
+               jsonInput != null ? jsonInput.toString() : NULL
+            });
       }
 
       jsonQuery = JSON.getObject(jsonInput, ConstantsIF.QUERY);
@@ -679,8 +717,12 @@ public class MongoDataAccess extends DataAccess {
       }
 
       if (_logger.isLoggable(DEBUG_LEVEL)) {
-         _logger.log(DEBUG_LEVEL, "output=''{0}'', json=''{1}''", new Object[] {
-               operOutput != null ? operOutput.toString() : NULL, jsonOutput != null ? jsonOutput.toString() : NULL });
+         _logger.log(DEBUG_LEVEL,
+            "output=''{0}'', json=''{1}''",
+            new Object[]{
+               operOutput != null ? operOutput.toString() : NULL,
+               jsonOutput != null ? jsonOutput.toString() : NULL
+            });
       }
 
       _logger.exiting(CLASS, METHOD);
@@ -690,7 +732,7 @@ public class MongoDataAccess extends DataAccess {
 
    /**
     * Initialize class instance.
-    * 
+    *
     * @throws Exception
     */
    private void init() throws Exception {
@@ -706,10 +748,16 @@ public class MongoDataAccess extends DataAccess {
 
          // build mongo connection uri
          // MongoClientURI("mongodb://superAdmin:admin123@idp.frdpcloud.com:27017/?authSource=admin");
-         buf.append("mongodb://").append(this.getParamNotEmpty(PARAM_AUTHEN_USER)).append(":")
-               .append(this.getParamNotEmpty(PARAM_AUTHEN_PASSWORD)).append("@")
-               .append(this.getParamNotEmpty(PARAM_HOST)).append(":").append(this.getParamNotEmpty(PARAM_PORT))
-               .append("/?authSource=").append(this.getParamNotEmpty(PARAM_AUTHEN_DATABASE));
+         buf.append("mongodb://")
+            .append(this.getParamNotEmpty(PARAM_AUTHEN_USER))
+            .append(":")
+            .append(this.getParamNotEmpty(PARAM_AUTHEN_PASSWORD))
+            .append("@")
+            .append(this.getParamNotEmpty(PARAM_HOST))
+            .append(":")
+            .append(this.getParamNotEmpty(PARAM_PORT))
+            .append("/?authSource=")
+            .append(this.getParamNotEmpty(PARAM_AUTHEN_DATABASE));
 
          try {
             uri = new MongoClientURI(buf.toString());
@@ -728,8 +776,12 @@ public class MongoDataAccess extends DataAccess {
          _parser = new JSONParser();
 
          if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.INFO, "{0}: Mongo Client address: {1}",
-                  new Object[] { METHOD, address == null ? NULL : address.toString() });
+            _logger.log(Level.INFO,
+               "{0}: Mongo Client address: {1}",
+               new Object[]{
+                  METHOD,
+                  address == null ? NULL : address.toString()
+               });
          }
 
          this.setState(STATE.READY);
@@ -743,7 +795,7 @@ public class MongoDataAccess extends DataAccess {
 
    /**
     * Get a MongoDB query object from a JSON object
-    * 
+    *
     * <pre>
     * JSON formats ...
     * {
@@ -797,64 +849,64 @@ public class MongoDataAccess extends DataAccess {
       }
 
       switch (oper) {
-      case ConstantsIF.ALL: // if oper == "all" ... return all the documents
-      {
-         query = new Document();
+         case ConstantsIF.ALL: // if oper == "all" ... return all the documents
+         {
+            query = new Document();
 
-         break;
-      }
-      case ConstantsIF.EQUAL: {
-         attr = JSON.getString(json, ConstantsIF.ATTRIBUTE);
-
-         if (STR.isEmpty(attr)) {
-            throw new Exception("Query Attribute is empty");
+            break;
          }
+         case ConstantsIF.EQUAL: {
+            attr = JSON.getString(json, ConstantsIF.ATTRIBUTE);
 
-         value = JSON.getString(json, ConstantsIF.VALUE);
+            if (STR.isEmpty(attr)) {
+               throw new Exception("Query Attribute is empty");
+            }
 
-         if (STR.isEmpty(value)) {
-            throw new Exception("Query Value is empty");
+            value = JSON.getString(json, ConstantsIF.VALUE);
+
+            if (STR.isEmpty(value)) {
+               throw new Exception("Query Value is empty");
+            }
+            query = new Document(attr, value);
+
+            break;
          }
-         query = new Document(attr, value);
+         case ConstantsIF.AND: {
+            jsonQueries = JSON.getArray(json, ConstantsIF.QUERIES);
 
-         break;
-      }
-      case ConstantsIF.AND: {
-         jsonQueries = JSON.getArray(json, ConstantsIF.QUERIES);
+            if (jsonQueries == null || jsonQueries.size() < 2) {
+               throw new Exception("Operator 'AND' requires at least two queries");
+            }
 
-         if (jsonQueries == null || jsonQueries.size() < 2) {
-            throw new Exception("Operator 'AND' requires at least two queries");
-         }
+            filters = new LinkedList<>();
 
-         filters = new LinkedList<>();
+            for (Object o : jsonQueries) {
+               if (o != null && o instanceof JSONObject) {
+                  oper = JSON.getString((JSONObject) o, ConstantsIF.OPERATOR);
+                  attr = JSON.getString((JSONObject) o, ConstantsIF.ATTRIBUTE);
+                  value = JSON.getString((JSONObject) o, ConstantsIF.VALUE);
 
-         for (Object o : jsonQueries) {
-            if (o != null && o instanceof JSONObject) {
-               oper = JSON.getString((JSONObject) o, ConstantsIF.OPERATOR);
-               attr = JSON.getString((JSONObject) o, ConstantsIF.ATTRIBUTE);
-               value = JSON.getString((JSONObject) o, ConstantsIF.VALUE);
-
-               if (!STR.isEmpty(oper) && !STR.isEmpty(attr) && !STR.isEmpty(value)) {
-                  if (oper.equalsIgnoreCase(ConstantsIF.EQUAL)) {
-                     filters.add(Filters.eq(attr, value));
-                  } else {
-                     throw new Exception("Queries has an unsupported Operator '" + oper + "'");
+                  if (!STR.isEmpty(oper) && !STR.isEmpty(attr) && !STR.isEmpty(value)) {
+                     if (oper.equalsIgnoreCase(ConstantsIF.EQUAL)) {
+                        filters.add(Filters.eq(attr, value));
+                     } else {
+                        throw new Exception("Queries has an unsupported Operator '" + oper + "'");
+                     }
                   }
                }
             }
+
+            if (filters.isEmpty()) {
+               throw new Exception("No Filters were created from the Queries");
+            }
+
+            query = Filters.and(filters);
+
+            break;
          }
-
-         if (filters.isEmpty()) {
-            throw new Exception("No Filters were created from the Queries");
+         default: {
+            throw new Exception("Unknown Query Operator '" + oper + "'");
          }
-
-         query = Filters.and(filters);
-
-         break;
-      }
-      default: {
-         throw new Exception("Unknown Query Operator '" + oper + "'");
-      }
       }
 
       _logger.exiting(CLASS, METHOD);
@@ -864,7 +916,7 @@ public class MongoDataAccess extends DataAccess {
 
    /**
     * Get MongoDB document for the specified identifier
-    * 
+    *
     * @param uid String document identifier
     * @return Document
     */
@@ -907,7 +959,7 @@ public class MongoDataAccess extends DataAccess {
 
    /**
     * Create a JSON object from the Document, only include "data" and "uid"
-    * 
+    *
     * <pre>
     * {
     *    "uid": "...",
@@ -1008,7 +1060,7 @@ public class MongoDataAccess extends DataAccess {
 
    /**
     * Get JSON Results object from MongoDB query results
-    * 
+    *
     * @param find FindIterable Document search results
     * @return JSONArray results data as a JSON array
     */
